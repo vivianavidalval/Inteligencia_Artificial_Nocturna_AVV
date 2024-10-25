@@ -274,4 +274,130 @@
         </div>
         </div>        
     </body>
+    <body>
+        <div class="container">
+        <div class="intro">
+        <div class="text">
+        <h1>Parcial Segundo Periodo IA</h1>
+        <h4>Clase 24 de septiembre del 2024</h4>
+        <h2>Punto #5: Explicación del Archivo logic.py</h2>
+    
+        <div class="container">
+            <h2>Propósito General</h2>
+            <p>Este archivo define una estructura para trabajar con proposiciones lógicas y operadores básicos como <em>AND</em>, <em>OR</em>, <em>NOT</em>, junto con un verificador de modelos.</p>
+    
+            <h2>Contenido del Código</h2>
+    
+            <h3>1. Encabezado</h3>
+            <pre><code>import itertools</code></pre>
+            <p><strong>Importación:</strong> Se importa el módulo <code>itertools</code>, que proporciona herramientas para iteradores eficientes.</p>
+    
+            <h3>2. Clase Sentence</h3>
+            <pre><code>
+    class Sentence():
+        """
+        Clase base para representar una oración lógica.
+        """
+            </code></pre>
+            <p>Es la clase base que define la estructura de una proposición lógica. Las subclases como <code>Not</code> y <code>And</code> heredan de ella.</p>
+    
+            <h4>Métodos de Sentence</h4>
+            <pre><code>
+    def evaluate(self, model):
+        """
+        Evalúa la oración utilizando un modelo.
+        """
+        raise Exception("nada que evaluar")
+            </code></pre>
+            <p>Método abstracto sobrescrito por subclases para evaluar las proposiciones en un modelo específico.</p>
+    
+            <h3>3. Clase Symbol</h3>
+            <pre><code>
+    class Symbol(Sentence):
+        """
+        Representa un símbolo lógico.
+        """
+        def __init__(self, name):
+            self.name = name
+    
+        def evaluate(self, model):
+            """
+            Evalúa el valor del símbolo en un modelo.
+            """
+            return bool(model.get(self.name, False))
+            </code></pre>
+    
+            <h3>4. Operadores Lógicos</h3>
+    
+            <h4>Negación: Clase Not</h4>
+            <pre><code>
+    class Not(Sentence):
+        """
+        Representa una negación lógica.
+        """
+        def __init__(self, operand):
+            Sentence.validate(operand)
+            self.operand = operand
+    
+        def evaluate(self, model):
+            return not self.operand.evaluate(model)
+            </code></pre>
+    
+            <h4>Conjunción: Clase And</h4>
+            <pre><code>
+    class And(Sentence):
+        """
+        Representa una conjunción lógica.
+        """
+        def __init__(self, *conjuncts):
+            self.conjuncts = list(conjuncts)
+    
+        def evaluate(self, model):
+            return all(conjunct.evaluate(model) for conjunct in self.conjuncts)
+            </code></pre>
+    
+            <h4>Disyunción: Clase Or</h4>
+            <pre><code>
+    class Or(Sentence):
+        """
+        Representa una disyunción lógica.
+        """
+        def __init__(self, *disjuncts):
+            self.disjuncts = list(disjuncts)
+    
+        def evaluate(self, model):
+            return any(disjunct.evaluate(model) for disjunct in self.disjuncts)
+            </code></pre>
+    
+            <h3>5. Verificación de Modelos: model_check</h3>
+            <pre><code>
+    def model_check(knowledge, query):
+        """
+        Verifica si una base de conocimiento implica una consulta.
+        """
+        def check_all(knowledge, query, symbols, model):
+            if not symbols:
+                if knowledge.evaluate(model):
+                    return query.evaluate(model)
+                return True
+            else:
+                p = symbols.pop()
+                model_true, model_false = model.copy(), model.copy()
+                model_true[p], model_false[p] = True, False
+                return (check_all(knowledge, query, symbols, model_true) and
+                        check_all(knowledge, query, symbols, model_false))
+    
+        symbols = set.union(knowledge.symbols(), query.symbols())
+        return check_all(knowledge, query, symbols, dict())
+            </code></pre>
+            <h2>Punto #6: Parcial 2do Corte</h2>
+            <h4>Clase 24 de septiembre del 2024</h4>
+            <h2>Punto #6: Estudianteunimayor.py</h2>
+            <br>
+          <figure>
+            <img src="./img/Parcial 2_ punto6.png" alt="Punto 6 Parcial 2do corte" title="Punto 6 Parcial 2do corte">
+            </figure>
+            <br>
+        </div>
+    </body>
 </html>
